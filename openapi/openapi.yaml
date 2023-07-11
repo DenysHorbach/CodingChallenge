@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: Microservice coding challenge API
+  description: API for retrieving information about Github repositories
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local server
+  - url: /
+    description: Remote server
+
+tags:
+  - name: repository-controller
+    description: 'Repository controller which is responsible for providing information about GitHub repositories'
+paths:
+  /api/v1/repositories/{username}:
+    get:
+      summary: Get list of Github repositories by username
+      operationId: getRepositoriesListByUsername
+      description: Returns list of repositories that are not forks for given username
+      tags:
+        - repository-controller
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RepositoryDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+components:
+  schemas:
+    RepositoryDTO:
+      type: object
+      properties:
+        repositoryName:
+          type: string
+          example: Hello world repository
+        ownerLogin:
+          type: string
+          example: John Doe
+        branches:
+          type: array
+          items:
+            $ref: '#/components/schemas/BranchDTO'
+    BranchDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: main
+        lastCommitSHA:
+          type: string
+          example: commit sha
+    FailureResponse:
+      properties:
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Message, that describing what happened
+  parameters:
+    username:
+      name: username
+      in: path
+      required: true
+      description: Github username
+      example: JohnDoe
+      schema:
+        type: string
