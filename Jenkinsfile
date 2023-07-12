@@ -53,10 +53,12 @@ pipeline {
         stage('Update CloudFormation Stack') {
             steps {
                 script {
-                    withAWS(credentials: 'aws-credentials', region: AWS_REGION) {
-                        def outputs = cfnUpdate(stack: STACK_NAME, template: file(TEMPLATE_FILE), parameters: [
-                            ImageTag: IMAGE_TAG
-                        ])
+                    withAWS(region: AWS_REGION, credentials: 'aws-credentials') {
+                        def outputs = cfnUpdate(
+                            stack: STACK_NAME,
+                            file: TEMPLATE_FILE,
+                            params: ['ImageTag': IMAGE_TAG]
+                        )
                         echo "CloudFormation Stack Outputs:"
                         echo outputs.toString()
                     }
