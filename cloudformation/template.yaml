@@ -191,7 +191,7 @@ Resources:
       Protocol: HTTP
       Port: 8080
       TargetType: ip
-      HealthCheckPath: /health
+      HealthCheckPath: /actuator/health
 
   ApplicationLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -250,7 +250,7 @@ Resources:
     DependsOn:
       - ApplicationLoadBalancerListener
     Properties:
-      ServiceName: DenysService
+      ServiceName: CodingChallengeService
       LaunchType: FARGATE
       Cluster: !Ref ECSCluster
       DesiredCount: 1

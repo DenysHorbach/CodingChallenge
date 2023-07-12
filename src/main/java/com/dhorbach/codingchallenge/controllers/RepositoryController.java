@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import models.RepositoryDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
@@ -25,11 +24,5 @@ public class RepositoryController implements RepositoryControllerApi {
     public Mono<ResponseEntity<Flux<RepositoryDTO>>> getRepositoriesListByUsername(String username, ServerWebExchange exchange) {
         final Flux<Repository> repositories = repositoryService.getRepositories(username);
         return Mono.just(ResponseEntity.ok(repositories.map(repository -> modelMapper.map(repository, RepositoryDTO.class))));
-    }
-
-    @GetMapping("/health")
-    public Mono<ResponseEntity<Void>> health() {
-        log.info("HEALTH CHECK TRIGGERED");
-        return Mono.just(ResponseEntity.ok().build());
     }
 }
