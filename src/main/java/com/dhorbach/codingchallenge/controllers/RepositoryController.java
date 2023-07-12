@@ -4,7 +4,6 @@ import api.RepositoryControllerApi;
 import com.dhorbach.codingchallenge.models.Repository;
 import com.dhorbach.codingchallenge.services.RepositoryService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import models.RepositoryDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class RepositoryController implements RepositoryControllerApi {
     private final RepositoryService repositoryService;
     private final ModelMapper modelMapper;

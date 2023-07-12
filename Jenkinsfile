@@ -28,24 +28,6 @@ pipeline {
             }
         }
 
-//         stage('Checkout') {
-//             steps {
-//                 checkout([$class: 'GitSCM',
-//                           branches: [[name: '*/main']],
-//                           doGenerateSubmoduleConfigurations: false,
-//                           extensions: [[$class: 'CleanBeforeCheckout'],
-//                                        [$class: 'SubmoduleOption',
-//                                         disableSubmodules: false,
-//                                         parentCredentials: true,
-//                                         recursiveSubmodules: true,
-//                                         reference: '',
-//                                         trackingSubmodules: false]],
-//                           submoduleCfg: [],
-//                           userRemoteConfigs: [[credentialsId: 'github-credentials',
-//                                                url: 'https://github.com/DenysHorbach/CodingChallenge.git']]])
-//             }
-//         }
-
         stage('Build and Test') {
             steps {
                 withGradle() {
@@ -71,13 +53,15 @@ pipeline {
         stage('Update CloudFormation Stack') {
             steps {
                 withAWS(region: AWS_REGION, credentials: 'aws-credentials') {
-                    cfnUpdate(
+                    def outputs = cfnUpdate(
                         stack: STACK_NAME,
                         file: TEMPLATE_FILE,
                         params: [
                             'ImageTag': IMAGE_TAG
                         ]
                     )
+                    echo "CloudFormation Stack Outputs:"
+                    echo outputs.toString()
                 }
             }
         }
